@@ -4,25 +4,27 @@
 
   <div class="div-imc">
     <span class="p-float-label">
-      <InputText id="input-weight" type="text" v-model="weight" />
+      <InputText id="input-weight" type="text" v-model="weight" v-bind:disabled="imc" />
       <label for="input-weight">Peso</label>
     </span>
   </div>
 
   <div class="div-imc">
     <span class="p-float-label">
-      <InputText id="input-height" type="text" v-model="height" />
+      <InputText id="input-height" type="text" v-model="height" v-bind:disabled="imc"/>
       <label for="input-height">Altura</label>
     </span>
   </div>
 
-  <Button style="margin-top: 1rem" label="Calcular" @click="calculate" />
+  <Button style="margin-top: 1rem; margin-right: 20px" label="Calcular" @click="calculate" />
   <Button label="Limpar" @click="clear" />
 
-  <p class="label-result">Seu IMC é: {{ imc }}</p>
-  <p class="label-classification">
-    A classificação do seu IMC é: {{ classification }}
-  </p>
+  <div v-if="imc">
+    <p class="label-result">Seu IMC é: {{ imc }}</p>
+    <p class="label-classification">
+      A classificação do seu IMC é: {{ classification }}
+    </p>
+  </div>
 </template>
 
 <script>
@@ -49,10 +51,14 @@ export default {
       } else {
         this.classification = "Obesidade mórbida";
       }
+      if(isNaN(this.imc)){
+        this.imc = null
+      }
+      console.log(this.imc)
     },
     clear: function () {
       (this.height = ""), (this.weight = "");
-      this.imc = "";
+      this.imc = null;
       this.classification = "";
     },
   },
