@@ -69,7 +69,7 @@
           type="number"
           v-model="valorParaDistribuir"
         />
-        <label for="input-weight">Valor a distribuir</label>
+        <label for="input-weight">R$ a distribuir</label>
         <Button
           style="margin-top: 1rem; margin-left: 10px"
           label="Calcular"
