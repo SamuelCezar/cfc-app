@@ -6,7 +6,12 @@
     <div>
       <div class="div-cfc">
         <span class="p-float-label">
-          <InputText id="input-weight" type="number" v-model="aulasDaniel" />
+          <InputText
+            id="input-weight"
+            type="number"
+            allowEmpty="false"
+            v-model="aulasDaniel"
+          />
           <label for="input-weight">Aulas Daniel</label>
         </span>
       </div>
@@ -42,10 +47,18 @@
   </div>
   <div v-if="totalAulas > 0">
     <p class="label-result">Total de aulas do mês: {{ this.totalAulas }}</p>
-    <p><b>Daniel: {{aulasDaniel}} aulas.</b></p>
-    <p><b>Severo: {{aulasSevero}} aulas.</b></p>
-    <p><b>Viviane: {{aulasViviane}} aulas.</b></p>
-    <p><b>Walter: {{aulasWalter}} aulas.</b></p>
+    <p>
+      <b>Daniel: {{ aulasDaniel }} aulas.</b>
+    </p>
+    <p>
+      <b>Severo: {{ aulasSevero }} aulas.</b>
+    </p>
+    <p>
+      <b>Viviane: {{ aulasViviane }} aulas.</b>
+    </p>
+    <p>
+      <b>Walter: {{ aulasWalter }} aulas.</b>
+    </p>
     <p class="label-classification">
       Agora digite qual o valor que vai ser distribuido entre os 4 instrutores:
     </p>
@@ -136,12 +149,24 @@ export default {
   },
   methods: {
     calculate: function () {
-      this.totalAulas =
-        parseInt(this.aulasDaniel) +
-        parseInt(this.aulasSevero) +
-        parseInt(this.aulasViviane) +
-        parseInt(this.aulasWalter);
-      console.log(this.totalAulas);
+      if (
+        this.aulasDaniel != "" &&
+        this.aulasDaniel >= 0 &&
+        this.aulasSevero != "" &&
+        this.aulasSevero >= 0 &&
+        this.aulasViviane != "" &&
+        this.aulasViviane >= 0 &&
+        this.aulasWalter != "" &&
+        this.aulasWalter >= 0
+      ) {
+        this.totalAulas =
+          parseInt(this.aulasDaniel) +
+          parseInt(this.aulasSevero) +
+          parseInt(this.aulasViviane) +
+          parseInt(this.aulasWalter);
+      } else {
+        alert("Preencha todos os valores corretamente, não podem haver valores em branco ou negativos.");
+      }
     },
     calcularPorcentagem: function () {
       this.porcentagemAulasDaniel = (
