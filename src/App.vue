@@ -1,28 +1,115 @@
 <template>
-  <h1>Cálculo do IMC</h1>
-  <h2>Digite seu peso e altura para calcular seu IMC</h2>
+  <h1>Cálculo da porcentagem a receber:</h1>
+  <h3>Digite quantas aulas cada uma dos instrutores deu no mês:</h3>
 
-  <div class="div-imc">
-    <span class="p-float-label">
-      <InputText id="input-weight" type="text" v-model="weight" v-bind:disabled="imc" />
-      <label for="input-weight">Peso</label>
-    </span>
+  <div v-if="!porcentagemAulasDaniel && totalAulas == null">
+    <div>
+      <div class="div-cfc">
+        <span class="p-float-label">
+          <InputText id="input-weight" type="number" v-model="aulasDaniel" />
+          <label for="input-weight">Aulas Daniel</label>
+        </span>
+      </div>
+
+      <div class="div-cfc">
+        <span class="p-float-label">
+          <InputText id="input-weight" type="number" v-model="aulasSevero" />
+          <label for="input-weight">Aulas Severo</label>
+        </span>
+      </div>
+
+      <div class="div-cfc">
+        <span class="p-float-label">
+          <InputText id="input-weight" type="number" v-model="aulasViviane" />
+          <label for="input-weight">Aulas Viviane</label>
+        </span>
+      </div>
+
+      <div class="div-cfc">
+        <span class="p-float-label">
+          <InputText id="input-weight" type="number" v-model="aulasWalter" />
+          <label for="input-weight">Aulas Walter</label>
+        </span>
+      </div>
+    </div>
+
+    <Button
+      style="margin-top: 1rem; margin-right: 20px"
+      label="Calcular"
+      @click="calculate"
+    />
+    <Button label="Limpar" @click="clear" />
   </div>
-
-  <div class="div-imc">
-    <span class="p-float-label">
-      <InputText id="input-height" type="text" v-model="height" v-bind:disabled="imc"/>
-      <label for="input-height">Altura</label>
-    </span>
-  </div>
-
-  <Button style="margin-top: 1rem; margin-right: 20px" label="Calcular" @click="calculate" />
-  <Button label="Limpar" @click="clear" />
-
-  <div v-if="imc">
-    <p class="label-result">Seu IMC é: {{ imc }}</p>
+  <div v-if="totalAulas > 0">
+    <p class="label-result">Total de aulas do mês: {{ this.totalAulas }}</p>
+    <p><b>Daniel: {{aulasDaniel}} aulas.</b></p>
+    <p><b>Severo: {{aulasSevero}} aulas.</b></p>
+    <p><b>Viviane: {{aulasViviane}} aulas.</b></p>
+    <p><b>Walter: {{aulasWalter}} aulas.</b></p>
     <p class="label-classification">
-      A classificação do seu IMC é: {{ classification }}
+      Agora digite qual o valor que vai ser distribuido entre os 4 instrutores:
+    </p>
+    <div class="div-cfc">
+      <span class="p-float-label">
+        <InputText
+          id="input-weight"
+          type="number"
+          v-model="valorParaDistribuir"
+        />
+        <label for="input-weight">Valor a distribuir</label>
+        <Button
+          style="margin-top: 1rem; margin-left: 10px"
+          label="Calcular"
+          @click="calcularPorcentagem"
+        />
+        <Button
+          style="margin-top: 1rem; margin-left: 10px"
+          label="Voltar"
+          @click="clear"
+        />
+      </span>
+    </div>
+  </div>
+
+  <div v-if="porcentagemAulasDaniel != 0">
+    <p class="label-classification">
+      <b>Daniel</b> deu {{ this.aulasDaniel }} aulas, o que corresponde a
+      {{ this.porcentagemAulasDaniel }}% das {{ totalAulas }} aulas.
+    </p>
+    <p>
+      Sendo assim ele vai receber <b>R${{ valorDanielReceber }}</b
+      >, correspondente a {{ this.porcentagemAulasDaniel }}% dos R$
+      {{ valorParaDistribuir }}.
+    </p>
+    <hr />
+    <p class="label-classification">
+      <b>Severo</b> deu {{ this.aulasSevero }} aulas, o que corresponde a
+      {{ this.porcentagemAulasSevero }}% das {{ totalAulas }} aulas.
+    </p>
+    <p>
+      Sendo assim ele vai receber <b>R${{ valorSeveroReceber }}</b
+      >, correspondente a {{ this.porcentagemAulasSevero }}% dos R$
+      {{ valorParaDistribuir }}.
+    </p>
+    <hr />
+    <p class="label-classification">
+      <b>Viviane</b> deu {{ this.aulasViviane }} aulas, o que corresponde a
+      {{ this.porcentagemAulasViviane }}% das {{ totalAulas }} aulas.
+    </p>
+    <p>
+      Sendo assim ela vai receber <b>R${{ valorVivianeReceber }}</b
+      >, correspondente a {{ this.porcentagemAulasViviane }}% dos R$
+      {{ valorParaDistribuir }}.
+    </p>
+    <hr />
+    <p class="label-classification">
+      <b>Walter</b> deu {{ this.aulasWalter }} aulas, o que corresponde a
+      {{ this.porcentagemAulasWalter }}% das {{ totalAulas }} aulas.
+    </p>
+    <p>
+      Sendo assim ele vai receber <b>R${{ valorWalterReceber }}</b
+      >, correspondente a {{ this.porcentagemAulasWalter }}% dos R$
+      {{ valorParaDistribuir }}.
     </p>
   </div>
 </template>
@@ -31,35 +118,79 @@
 export default {
   data() {
     return {
-      height: null,
-      weight: null,
-      imc: null,
-      classification: "",
+      aulasDaniel: "",
+      aulasSevero: "",
+      aulasViviane: "",
+      aulasWalter: "",
+      totalAulas: null,
+      valorParaDistribuir: undefined,
+      porcentagemAulasDaniel: 0,
+      valorDanielReceber: 0,
+      porcentagemAulasSevero: 0,
+      valorSeveroReceber: 0,
+      porcentagemAulasViviane: 0,
+      valorVivianeReceber: 0,
+      porcentagemAulasWalter: 0,
+      valorWalterReceber: 0,
     };
   },
   methods: {
     calculate: function () {
-      this.imc = (this.weight / (this.height * this.height)).toFixed(2);
-      if (this.imc < 18.5) {
-        this.classification = "Magreza";
-      } else if (this.imc >= 18.5 && this.imc < 25) {
-        this.classification = "Normal";
-      } else if (this.imc >= 25 && this.imc < 30) {
-        this.classification = "Sobrepeso";
-      } else if (this.imc >= 30 && this.imc < 40) {
-        this.classification = "Obesidade";
-      } else {
-        this.classification = "Obesidade mórbida";
-      }
-      if(isNaN(this.imc)){
-        this.imc = null
-      }
-      console.log(this.imc)
+      this.totalAulas =
+        parseInt(this.aulasDaniel) +
+        parseInt(this.aulasSevero) +
+        parseInt(this.aulasViviane) +
+        parseInt(this.aulasWalter);
+      console.log(this.totalAulas);
+    },
+    calcularPorcentagem: function () {
+      this.porcentagemAulasDaniel = (
+        (this.aulasDaniel / this.totalAulas) *
+        100
+      ).toFixed(2);
+      this.valorDanielReceber = (
+        (this.valorParaDistribuir * this.porcentagemAulasDaniel) /
+        100
+      ).toFixed(2);
+
+      this.porcentagemAulasSevero = (
+        (this.aulasSevero / this.totalAulas) *
+        100
+      ).toFixed(2);
+      this.valorSeveroReceber = (
+        (this.valorParaDistribuir * this.porcentagemAulasSevero) /
+        100
+      ).toFixed(2);
+
+      this.porcentagemAulasViviane = (
+        (this.aulasViviane / this.totalAulas) *
+        100
+      ).toFixed(2);
+      this.valorVivianeReceber = (
+        (this.valorParaDistribuir * this.porcentagemAulasViviane) /
+        100
+      ).toFixed(2);
+
+      this.porcentagemAulasWalter = (
+        (this.aulasWalter / this.totalAulas) *
+        100
+      ).toFixed(2);
+      this.valorWalterReceber = (
+        (this.valorParaDistribuir * this.porcentagemAulasWalter) /
+        100
+      ).toFixed(2);
     },
     clear: function () {
-      (this.height = ""), (this.weight = "");
-      this.imc = null;
-      this.classification = "";
+      (this.aulasDaniel = ""),
+        (this.aulasSevero = ""),
+        (this.aulasViviane = ""),
+        (this.aulasWalter = "");
+      this.totalAulas = null;
+      this.valorParaDistribuir = undefined;
+      this.porcentagemAulasDaniel = 0;
+      this.porcentagemAulasSevero = 0;
+      this.porcentagemAulasViviane = 0;
+      this.porcentagemAulasWalter = 0;
     },
   },
 };
@@ -72,7 +203,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 }
-.div-imc {
+.div-cfc {
   margin-top: 1.5rem;
 }
 .label-result {

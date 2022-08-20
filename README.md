@@ -1,4 +1,4 @@
-# imc-app
+# CFC-APP
 
 ## Project setup
 ```
