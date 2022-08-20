@@ -1,6 +1,6 @@
 <template>
   <h1>Cálculo da porcentagem a receber:</h1>
-  <h3>Digite quantas aulas cada uma dos instrutores deu no mês:</h3>
+  <h3>Digite quantas aulas cada um dos instrutores deu no mês:</h3>
 
   <div v-if="!porcentagemAulasDaniel && totalAulas == null">
     <div>
