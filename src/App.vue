@@ -64,9 +64,9 @@
     </p>
     <div class="div-cfc">
       <span class="p-float-label">
-        <InputText
-          id="input-weight"
-          type="number"
+        <InputNumber
+          mode="currency"
+          currency="BRL"
           v-model="valorParaDistribuir"
         />
         <label for="input-weight">R$ a distribuir</label>
